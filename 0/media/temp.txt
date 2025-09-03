@@ -1,0 +1,1 @@
+created this file to create a new media dir without using vscode bc i do be limited on time for this first project
