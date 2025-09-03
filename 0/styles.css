@@ -73,6 +73,18 @@ section h2 {
   margin-right: auto;
 }
 
+.image-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;         /* space between images */
+  margin-bottom: 10px;
+}
+
+.image-row .photo {
+  width: 48%;        /* each image takes about half the width */
+  height: auto;
+}
+
 /* Footer styling */
 footer {
   text-align: center;
