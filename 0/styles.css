@@ -29,14 +29,20 @@
 html,body{ height:100%; }
 body{
   font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  line-height:1.7;
-  color:var(--text);
+  line-height: 1.7;
+  color: var(--text);
   background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(253,181,21,.12), transparent 60%),
-    radial-gradient(900px 500px at 110% 10%, rgba(0,50,98,.12), transparent 60%),
+    radial-gradient(1400px 800px at -15% -10%, rgba(253,181,21,.12), transparent 70%),
+    radial-gradient(1300px 700px at 115% 0%,   rgba(0,50,98,.12),  transparent 70%),
     var(--bg);
-  padding:32px 20px;
+  /* prevent tiling */
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  /* keep them big enough and positioned off-canvas */
+  background-size: 1400px 800px, 1300px 700px, auto;
+  background-attachment: scroll;  /* or 'fixed' if you want a parallax feel */
+  padding: 32px 20px;
 }
+
 
 /* Constrain width and add generous rhythm */
 main, header, footer{ max-width: 980px; margin: 0 auto; }
