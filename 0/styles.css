@@ -1,101 +1,170 @@
+/* ===== Theme & Reset ===== */
+:root{
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --text: #1e1f24;
+  --muted: #5b5f6a;
+  --border: #e6e8ee;
+  --accent: #003262;   /* Berkeley Blue */
+  --accent-2: #FDB515; /* California Gold */
+  --radius: 14px;
+  --shadow: 0 8px 24px rgba(16,24,40,.08);
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #0f1115;
+    --card: #151823;
+    --text: #e8eaf0;
+    --muted: #a2a8b3;
+    --border: #252b37;
+    --shadow: 0 8px 28px rgba(0,0,0,.45);
+  }
+}
+
 /* Basic reset */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+/* ===== Base ===== */
+html,body{ height:100%; }
+body{
+  font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  line-height:1.7;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(253,181,21,.12), transparent 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(0,50,98,.12), transparent 60%),
+    var(--bg);
+  padding:32px 20px;
 }
 
-/* Body and typography */
-body {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background-color: #f7f7f7;
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
+/* Constrain width and add generous rhythm */
+main, header, footer{ max-width: 980px; margin: 0 auto; }
+
+/* ===== Header ===== */
+header{
+  text-align:center;
+  margin-bottom: 36px;
+  padding: 28px 20px;
+  background: linear-gradient(180deg, rgba(0,50,98,.10), transparent 55%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
-/* Header */
-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-header .logo {
-  max-width: 120px;
-  height: auto;
+header .logo{
+  max-width: 80px;
+  height:auto;
   margin-bottom: 10px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.12));
 }
 
-header h1 {
-  font-size: 2em;
-  margin-bottom: 5px;
+header h1{
+  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem);
+  letter-spacing:.2px;
+  margin-bottom: 6px;
+  color: var(--accent);
 }
 
-header .due-date {
-  color: #555;
-  font-size: 0.9em;
+header .due-date{
+  color: var(--muted);
+  font-size: .95rem;
 }
 
-/* Sections and layout */
-section {
-  margin-bottom: 40px;
+/* ===== Sections as cards ===== */
+section{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px 20px;
+  margin-bottom: 28px;
 }
 
-section h2 {
-  font-size: 1.5em;
-  margin-bottom: 15px;
+section h2{
+  font-size: 1.25rem;
+  margin-bottom: 14px;
+  color: var(--accent);
+  display:flex; align-items:center; gap:10px;
+}
+section h2::before{
+  content:"";
+  width:8px; height:8px; border-radius:999px;
+  background: var(--accent-2);
+  box-shadow: 0 0 0 4px rgba(253,181,21,.18);
 }
 
-/* Photo styling */
-.photo {
-  display: block;
-  width: 100%;
-  height: auto;
+/* ===== Images ===== */
+.photo{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  outline: 0;
+  box-shadow: 0 6px 18px rgba(16,24,40,.10);
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+
+/* Light hover lift */
+.photo:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(16,24,40,.16);
+  filter: saturate(1.03);
+}
+
+/* Row layout for pairs */
+.image-row{
+  display:flex;
+  justify-content:center;
+  gap:18px;
   margin-bottom: 10px;
-  border: 2px solid #ddd;
-  border-radius: 4px;
+  flex-wrap: wrap; /* lets them wrap on small screens */
 }
 
-/* Caption styling */
-.caption {
-  font-size: 0.9em;
-  color: #555;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* GIF special styling */
-.photo.gif {
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.image-row {
-  display: flex;
-  justify-content: center;
-  gap: 20px;         /* space between images */
-  margin-bottom: 10px;
-}
-
-.image-row .photo {
-  width: 48%;        /* each image takes about half the width */
+/* Default side-by-side sizing */
+.image-row .photo{
+  width: 48%;
   height: auto;
 }
 
-.image-row .photo.selfie {
-  height: 350px; /* adjust to taste */
+/* Make tall selfies smaller (Part 1) */
+.image-row .photo.selfie{
+  height: 320px;   /* tweak if needed */
   width: auto;
+  object-fit: cover;        /* tasteful crop if aspect ratio differs */
+  object-position: center;
 }
 
-/* Footer styling */
-footer {
-  text-align: center;
-  font-size: 0.9em;
-  color: #666;
-  margin-top: 60px;
-  padding-top: 20px;
-  border-top: 1px solid #ddd;
+/* Dolly GIF centering */
+.photo.gif{
+  max-width: 640px;
+  margin: 0 auto 10px auto;
+  width: 100%;
+}
+
+/* Captions */
+.caption{
+  font-size: .95rem;
+  color: var(--muted);
+  text-align:center;
+  margin-top: 6px;
+}
+
+/* ===== Footer ===== */
+footer{
+  max-width:980px;
+  margin: 40px auto 0;
+  text-align:center;
+  font-size: .95rem;
+  color: var(--muted);
+  padding: 18px 0 0;
+  border-top: 1px dashed var(--border);
+}
+
+/* ===== Responsive tweaks ===== */
+@media (max-width: 760px){
+  body{ padding: 20px 14px; }
+  .image-row .photo{ width:100%; }
+  .image-row .photo.selfie{ height: 260px; }
 }
