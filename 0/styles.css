@@ -27,22 +27,29 @@
 
 /* ===== Base ===== */
 html,body{ height:100%; }
+html { background: var(--bg); }
 body{
   font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
   line-height: 1.7;
   color: var(--text);
   background:
-    radial-gradient(1400px 800px at -15% -10%, rgba(253,181,21,.12), transparent 70%),
-    radial-gradient(1300px 700px at 115% 0%,   rgba(0,50,98,.12),  transparent 70%),
     var(--bg);
-  /* prevent tiling */
-  background-repeat: no-repeat, no-repeat, no-repeat;
-  /* keep them big enough and positioned off-canvas */
-  background-size: 1400px 800px, 1300px 700px, auto;
-  background-attachment: scroll;  /* or 'fixed' if you want a parallax feel */
-  padding: 32px 20px;
 }
 
+/* Full-viewport gradient overlay that never repeats */
+body::before{
+  content: "";
+  position: fixed;
+  inset: -30vh -30vw -30vh -30vw;   /* overscan so edges stay offscreen */
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(1600px 900px at -15% -10%, rgba(253,181,21,.12), transparent 72%),
+    radial-gradient(1500px 850px at 115% 0%,  rgba(0,50,98,.12),  transparent 72%);
+  background-repeat: no-repeat, no-repeat;
+  /* No background-size needed because sizes are set in the gradients */
+}
 
 /* Constrain width and add generous rhythm */
 main, header, footer{ max-width: 980px; margin: 0 auto; }
