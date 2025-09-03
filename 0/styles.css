@@ -85,7 +85,7 @@ section h2 {
   height: auto;
 }
 
-.photo.selfie {
+.image-row .photo.selfie {
   height: 350px; /* adjust to taste */
   width: auto;
 }
