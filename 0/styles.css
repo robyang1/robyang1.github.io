@@ -34,6 +34,7 @@ body{
   color: var(--text);
   background:
     var(--bg);
+  padding: 32px 20px;
 }
 
 /* Full-viewport gradient overlay that never repeats */
