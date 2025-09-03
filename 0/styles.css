@@ -85,6 +85,11 @@ section h2 {
   height: auto;
 }
 
+.photo.selfie {
+  height: 350px; /* adjust to taste */
+  width: auto;
+}
+
 /* Footer styling */
 footer {
   text-align: center;
