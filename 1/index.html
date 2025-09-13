@@ -3,39 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CS180 Project 0 – Becoming Friends with Your Camera</title>
+  <title>CS180 Project 1 – Colorizing the Prokudin-Gorskii Photo Collection</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>CS180 Project 0: Becoming Friends with Your Camera</h1>
-    <p class="due-date">Due: Tuesday, September 2, 2025 at 11:59 PM</p>
+    <h1>CS180 Project 1: Colorizing the Prokudin-Gorskii Photo Collection</h1>
+    <p class="due-date">Due: Friday, September 12, 2025 at 11:59 PM</p>
   </header>
 
   <main>
     <section>
-      <h2>Part 1: Selfie—The Wrong Way vs. The Right Way</h2>
-      <div class="image-row">
-        <img src="media/PXL_20250903_023733961.jpg" alt="Selfie taken the wrong way" class="photo selfie">
-        <img src="media/PXL_20250903_023743650.jpg" alt="Selfie taken the right way" class="photo selfie">
-      </div>
-      <p class="caption">Left: Distorted close-up selfie. Right: Further, zoomed in selfie</p>
+      <h2>Overview & Approach</h2>
+      <p>In this project, I wrote code to automatically align RGB pictures taken through colored filters by photographer Sergey Mikhaylovich Prokudin-Gorsky.</p>
+      <p>To motivate the alignment method, it's helpful to realize that even though the pictures were taken through different colored filters, they still visually look very similar. This is because we expect them all to look similar to the black and white image without any filter, which tells us which parts of the image are bright and which are dark. Thus, we should expect a good alignment to also have similar pixel brightnesses for each color filter. </p>
+      <p>Two ways to quantify this are the spec's suggested Euclidean Distance, which just takes the L2 norm of the difference of the pictures pixel-wise, and Normalized Cross-Correlation, which is a dot product of the normalized pictures treated as vectors. The closer two pictures are to each other, we expect the first to be lower (since they are closer to each other in that number-of-pixels dimensional space) and the second to be larger (since the dot product of two more similar unit vectors is higher). </p>
+      <p>To combine these two metrics, I simply took L2 divided by NCC, and lower is better. The reasoning is that this is agnostic to scaling; if we did something like a linear combination of the two instead, the issue is that different pictures have different best L2 alignments, which would make choosing the coefficients of the linear combination a headache and not constant between pictures. L2/NCC is robust to this. </p>
+      <p>There are potential alternatives to combining I thought of, such as L2/NCC^2, but these didn't make much of a difference so I stuck with the simple L2/NCC which worked pretty well. </p>
+      <p>Another important improvement I made was cropping off the first and last tenth of pictures in the x and y direction when calculating the metric. This is because we expect the borders to not align with each other, so it doesn't make sense to calculate the metric with them included. Without automatic border detection, a safe assumption is that taking the "middle 10 to 90%tiles" of an image is safe without being overly conservative, from looking at a few examples.</p>
+      <p>Finally, I also implemented the pyramid style multi-scale alignment. The idea behind my implementation is that the pyramid style alignment is similar to a <em>binary search</em> for the best alignment; downscaled images are used to find the rough ballpark for where the best alignment is, which is successively fine-tuned in higher scales. I used a recursive implementation where the image would be downscaled until it was less than 100 pixels across, then aligned to the best -3 to 3 pixel deviation in both directions according to the metric, then that alignment serves as the center for the next scale; specifically the image resolution is doubled as is the alignment to match the new scale, then the process is repeated until we get back to the original image.</p>
+      <p>Technically, a -1 to 1 pixel deviation should be enough for a perfect binary search, but I chose -3 to 3 for robustness; in case the best alignment in a downscaled image doesn't fully match the best alignment for the next scale, the -3 to 3 search gives the algorithm room to aggressively correct back. </p>
+      <p>I did not implement any bells and whistles.</p>
     </section>
 
     <section>
-      <h2>Part 2: Architectural Perspective Compression</h2>
+      <h2>Results Gallery</h2>
       <div class="image-row">
-        <img src="media/PXL_20250903_030921363.jpg" alt="Zoomed architectural scene" class="photo">
-        <img src="media/PXL_20250903_030907017.jpg" alt="Wide architectural scene" class="photo">
+        <figure style="width:48%">
+          <img src="results/cathedral.jpg" alt="cathedral colorized result" class="photo">
+          <figcaption class="caption">cathedral.jpg</figcaption>
+        </figure>
+        <figure style="width:48%">
+          <img src="results/church.jpg" alt="church colorized result" class="photo">
+          <figcaption class="caption">church.jpg</figcaption>
+        </figure>
       </div>
-      <p class="caption">A view of the corner pavilion of Doe Library at twilight. Left: close up and unzoomed. Right: Further away and zoomed.</p>
+      <div class="image-row">
+        <figure style="width:48%">
+          <img src="results/emir.jpg" alt="emir colorized result" class="photo">
+          <figcaption class="caption">emir.jpg</figcaption>
+        </figure>
+        <figure style="width:48%">
+          <img src="results/harvesters.jpg" alt="harvesters colorized result" class="photo">
+          <figcaption class="caption">harvesters.jpg</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure style="width:48%">
+          <img src="results/icon.jpg" alt="icon colorized result" class="photo">
+          <figcaption class="caption">icon.jpg</figcaption>
+        </figure>
+        <figure style="width:48%">
+          <img src="results/italil.jpg" alt="italil colorized result" class="photo">
+          <figcaption class="caption">italil.jpg</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure style="width:48%">
+          <img src="results/lastochikino.jpg" alt="lastochikino colorized result" class="photo">
+          <figcaption class="caption">lastochikino.jpg</figcaption>
+        </figure>
+        <figure style="width:48%">
+          <img src="results/lugano.jpg" alt="lugano colorized result" class="photo">
+          <figcaption class="caption">lugano.jpg</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure style="width:48%">
+          <img src="results/melons.jpg" alt="melons colorized result" class="photo">
+          <figcaption class="caption">melons.jpg</figcaption>
+        </figure>
+        <figure style="width:48%">
+          <img src="results/monastery.jpg" alt="monastery colorized result" class="photo">
+          <figcaption class="caption">monastery.jpg</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure style="width:48%">
+          <img src="results/self_portrait.jpg" alt="self portrait colorized result" class="photo">
+          <figcaption class="caption">self_portrait.jpg</figcaption>
+        </figure>
+        <figure style="width:48%">
+          <img src="results/siren.jpg" alt="siren colorized result" class="photo">
+          <figcaption class="caption">siren.jpg</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure style="width:48%">
+          <img src="results/three_generations.jpg" alt="three generations colorized result" class="photo">
+          <figcaption class="caption">three_generations.jpg</figcaption>
+        </figure>
+        <figure style="width:48%">
+          <img src="results/tobolsk.jpg" alt="tobolsk colorized result" class="photo">
+          <figcaption class="caption">tobolsk.jpg</figcaption>
+        </figure>
+      </div>
     </section>
-
+    
     <section>
-      <h2>Part 3: The Dolly Zoom Effect</h2>
-      <p>Below is the animated GIF of my dolly zoom sequence:</p>
-      <img src="media/earbuds dolly zoom gif.gif" alt="Dolly zoom animated GIF" class="photo gif">
-      <p class="caption">A dolly zoom of a cool earbuds case I have!</p>
+      <h2>Additional Results</h2>
+      <div class="image-row">
+        <figure style="width:48%">
+          <img src="additional_results/camelman.jpg" alt="camelman additional result" class="photo">
+          <figcaption class="caption">camelman.jpg</figcaption>
+        </figure>
+        <figure style="width:48%">
+          <img src="additional_results/cliff.jpg" alt="cliff additional result" class="photo">
+          <figcaption class="caption">cliff.jpg</figcaption>
+        </figure>
+      </div>
+      <div class="image-row">
+        <figure style="width:48%">
+          <img src="additional_results/figurine.jpg" alt="figurine additional result" class="photo">
+          <figcaption class="caption">figurine.jpg</figcaption>
+        </figure>
+      </div>
     </section>
   </main>
 

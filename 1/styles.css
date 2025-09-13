@@ -109,6 +109,11 @@ section h2::before{
   box-shadow: 0 0 0 4px rgba(253,181,21,.18);
 }
 
+/* Indent the first line of body paragraphs inside main sections */
+main section p:not(.caption){
+  text-indent: 1.5em;
+}
+
 /* ===== Images ===== */
 .photo{
   display:block;
