@@ -1,0 +1,17 @@
+In this project, I wrote code to automatically align RGB pictures taken through colored filters by photographer Sergey Mikhaylovich Prokudin-Gorsky.
+
+To motivate the alignment method, it's helpful to realize that even though the pictures were taken through different colored filters, they still visually look very similar. This is because we expect them all to look similar to the black and white image without any filter, which tells us which parts of the image are bright and which are dark. Thus, we should expect a good alignment to also have similar pixel brightnesses for each color filter. 
+
+Two ways to quantify this are the spec's suggested Euclidean Distance, which just takes the L2 norm of the difference of the pictures pixel-wise, and Normalized Cross-Correlation, which is a dot product of the normalized pictures treated as vectors. The closer two pictures are to each other, we expect the first to be lower (since they are closer to each other in that number-of-pixels dimensional space) and the second to be larger (since the dot product of two more similar unit vectors is higher). 
+
+To combine these two metrics, I simply took L2 divided by NCC, and lower is better. The reasoning is that this is agnostic to scaling; if we did something like a linear combination of the two instead, the issue is that different pictures have different best L2 alignments, which would make choosing the coefficients of the linear combination a headache and not constant between pictures. L2/NCC is robust to this. 
+
+There are potential alternatives to combining I thought of, such as L2/NCC^2, but these didn't make much of a difference so I stuck with the simple L2/NCC which worked pretty well. 
+
+Another important improvement I made was cropping off the first and last tenth of pictures in the x and y direction when calculating the metric. This is because we expect the borders to not align with each other, so it doesn't make sense to calculate the metric with them included. Without automatic border detection, a safe assumption is that taking the "middle 10 to 90%tiles" of an image is safe without being overly conservative, from looking at a few examples.
+
+Finally, I also implemented the pyramid style multi-scale alignment. The idea behind my implementation is that the pyramid style alignment is similar to a *binary search* for the best alignment; downscaled images are used to find the rough ballpark for where the best alignment is, which is successively fine-tuned in higher scales. I used a recursive implementation where the image would be downscaled until it was less than 100 pixels across, then aligned to the best -3 to 3 pixel deviation in both directions according to the metric, then that alignment serves as the center for the next scale; specifically the image resolution is doubled as is the alignment to match the new scale, then the process is repeated until we get back to the original image.
+
+Technically, a -1 to 1 pixel deviation should be enough for a perfect binary search, but I chose -3 to 3 for robustness; in case the best alignment in a downscaled image doesn't fully match the best alignment for the next scale, the -3 to 3 search gives the algorithm room to aggressively correct back. 
+
+I did not implement any bells and whistles.
