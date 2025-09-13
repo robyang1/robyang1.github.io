@@ -1,0 +1,1 @@
+To run my code, simply put progress.ipynb in the same directory as the data folder and run the first 4 cells to reproduce the results! The rest is me doing some experimentation or EDA which you can also look at.
