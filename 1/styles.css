@@ -54,7 +54,7 @@ body::before{
 }
 
 /* Constrain width and add generous rhythm */
-main, header, footer{ max-width: 980px; margin: 0 auto; }
+main, header, footer{ max-width: 1200px; margin: 0 auto; }
 
 /* ===== Header ===== */
 header{
@@ -136,17 +136,16 @@ main section p:not(.caption){
 /* Row layout for pairs */
 .image-row{
   display:flex;
-  justify-content:center;
+  justify-content:flex-start;
   gap:18px;
   margin-bottom: 10px;
   flex-wrap: wrap; /* lets them wrap on small screens */
 }
 
 /* Default side-by-side sizing */
-.image-row .photo{
-  width: 48%;
-  height: auto;
-}
+/* Figures in responsive grid */
+.image-row figure{ width: 48%; }
+.image-row .photo{ width:100%; height:auto; }
 
 /* Make tall selfies smaller (Part 1) */
 .image-row .photo.selfie{
@@ -185,6 +184,12 @@ footer{
 /* ===== Responsive tweaks ===== */
 @media (max-width: 760px){
   body{ padding: 20px 14px; }
-  .image-row .photo{ width:100%; }
+  .image-row figure{ width:100%; }
   .image-row .photo.selfie{ height: 260px; }
+}
+
+/* Wider screens: denser grid (3 per row) */
+@media (min-width: 1200px){
+  .image-row{ gap: 20px; }
+  .image-row figure{ width: calc((100% - 40px) / 3); }
 }
